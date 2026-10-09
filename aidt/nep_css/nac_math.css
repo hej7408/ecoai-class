@@ -1,0 +1,278 @@
+﻿/* nac_math.css */
+
+
+.nac_math {
+    padding:5px;
+    box-sizing:border-box;
+    -webkit-writing-mode:horizontal-tb !important;
+    writing-mode:horizontal-tb !important;
+    -webkit-column-break-inside:avoid;
+    page-break-inside:avoid;
+    break-inside: avoid;
+
+    display:flex;
+    flex-flow:column nowrap;
+    align-items:stretch;
+    justify-content:center;
+}
+
+.nac_math_item_container {
+    flex-grow:1;
+    position:relative;
+}
+
+.nac_math input {
+    margin:0px;
+    padding:0px;
+    width:100%;
+    height:100%;
+    color:inherit;
+    font:inherit;
+    box-sizing:border-box;
+    border:1px solid #bbb;
+    background-color:#fff;
+}
+
+.nac_math input:focus {
+    outline:none;
+    z-index:99;
+    text-align:center;
+    border:1px solid #9999ff;
+    transform:scale(1.5);
+}
+
+.nac_math_horz input {
+    text-align:center;
+}
+
+.nac_math_vert input {
+    padding:0px 5px 0px 0px;
+    text-align:right;
+}
+
+.nac_math_result_o,
+.nac_math_result_x {
+    max-width:100%;
+    max-height:100%;
+    display:none;
+    opacity:0;
+    z-index:9;
+    transition:opacity ease-out 300ms;
+}
+
+.nac_math_item {
+    margin:5px;
+    padding:5px;
+    position:relative;
+}
+
+.nac_math_horz .nac_math_item {
+    display:flex;
+    flex-flow:row nowrap;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.nac_math_vert .nac_math_item {
+    display:flex;
+    flex-flow:column nowrap;
+    align-items:flex-end;
+    justify-content:space-between;
+}
+
+.nac_math_horz .nac_math_operator,
+.nac_math_horz .nac_math_equal {
+    width:auto;
+    height:25%;
+}
+
+.nac_math_horz .nac_math_term {
+    height:100%;
+    position:relative;
+}
+
+.nac_math_horz .nac_term_type_basic,
+.nac_math_horz .nac_term_type_bunsu {
+    width:20%;
+}
+
+.nac_math_horz .nac_term_type_debunsu {
+    width:30%;
+}
+
+.nac_math_horz .nac_term_type_rest {
+    width:40%;
+}
+
+.nac_math_vert .nac_math_term {
+    height:25%;
+    position:relative;
+}
+
+.nac_math_vert .nac_math_term_left,
+.nac_math_vert .nac_math_term_result {
+    width:70%;
+}
+
+.nac_math_vert .nac_math_term_result.nac_term_type_rest {
+    width:100%;
+}
+
+.nac_math_vert .nac_math_term_vert_right {
+    width:100%;
+    height:25%;
+    position:relative;
+    
+    display:flex;
+    flex-flow:row nowrap;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.nac_math_term_vert_right > .nac_math_operator {
+    width:auto;
+    height:50%;
+}
+
+.nac_math_term_vert_right > .nac_math_term_right {
+    width:70%;
+    height:100%;
+    position:relative;
+}
+
+.nac_math_item_vert_separator {
+    width:100%;
+    height:1px;
+    box-sizing:border-box;
+    border:1px solid #888;
+}
+
+.nac_term_bunsu {
+    width:100%;
+    height:100%;
+    position:relative;
+    box-sizing:border-box;
+
+    display:flex;
+    flex-flow:column nowrap;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.nac_bunsu_separator {
+    margin:5px 0px;
+    width:80%;
+    height:1px;
+    box-sizing:border-box;
+    border:1px solid #888;
+}
+
+.nac_term_debunsu,
+.nac_term_rest {
+    width:100%;
+    height:100%;
+    position:relative;
+    box-sizing:border-box;
+
+    display:flex;
+    flex-flow:row nowrap;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.nac_term_rest > div {
+    width:40%;
+}
+
+.nac_term_rest > .nac_math_dot {
+    width:10%;
+    height:auto;
+}
+
+.nac_value_container {
+    width:100%;
+    height:100%;
+    position:relative;
+    box-sizing:border-box;
+
+    display:flex;
+    flex-flow:row nowrap;
+    align-items:center;
+}
+
+.nac_math_horz .nac_value_container {
+    justify-content:center;
+}
+
+.nac_math_vert .nac_math_term_left .nac_value_container,
+.nac_math_vert .nac_math_term_right .nac_value_container,
+.nac_math_horz .nac_math_term_left .nac_term_debunsu > .nac_value_container,
+.nac_math_horz .nac_math_term_right .nac_term_debunsu > .nac_value_container {
+    padding:0px 5px 0px 0px;
+    justify-content:flex-end;
+}
+
+.nac_term_debunsu > .nac_value_container {
+    width:35%;
+}
+
+.nac_term_debunsu > .nac_term_bunsu {
+    width:60%;
+}
+
+.nac_math_term_result .nac_term_debunsu > .nac_value_container,
+.nac_math_term_result .nac_term_debunsu > .nac_term_bunsu {
+    width:48%;
+}
+
+.nac_term_debunsu > .nac_value_container,
+.nac_term_bunsu > .nac_value_container {
+    height:50%;
+}
+
+.nac_term_rest > .nac_value_container {
+    width:40%;
+}
+
+.nac_math_separator {
+    flex-shrink:0;
+
+    margin:10px 10px;
+    height:1px;
+    box-sizing:border-box;
+    border:1px solid #888;
+}
+
+.nac_math_control_container {
+    flex-shrink:0;
+
+    display:flex;
+    flex-flow:row wrap;
+    align-items:center;
+    justify-content:center;
+}
+
+.nac_math_generate_button,
+.nac_math_show_answer_button,
+.nac_math_show_result_button,
+.nac_math_init_wrong_button,
+.nac_math_init_all_button {
+    margin:0px 10px;
+    cursor:default;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

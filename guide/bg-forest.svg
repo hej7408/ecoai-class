@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dff1f7"/><stop offset=".55" stop-color="#eef7e4"/><stop offset="1" stop-color="#f3f8ec"/></linearGradient>
+<radialGradient id="sun" cx=".85" cy=".12" r=".35"><stop offset="0" stop-color="#fff6c8" stop-opacity=".9"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></radialGradient>
+<g id="pine"><rect x="-6" y="0" width="12" height="40" fill="#8a6a3f"/><path d="M0-120 L50-30 H-50Z" fill="currentColor"/><path d="M0-80 L62 10 H-62Z" fill="currentColor"/><path d="M0-40 L74 46 H-74Z" fill="currentColor"/></g>
+<g id="round"><rect x="-6" y="0" width="12" height="46" fill="#8a6a3f"/><circle cx="0" cy="-26" r="48" fill="currentColor"/><circle cx="-34" cy="0" r="32" fill="currentColor"/><circle cx="34" cy="0" r="32" fill="currentColor"/></g>
+<g id="cloud" fill="#fff" opacity=".85"><ellipse cx="0" cy="0" rx="70" ry="22"/><ellipse cx="-34" cy="-14" rx="30" ry="22"/><ellipse cx="22" cy="-20" rx="36" ry="26"/></g>
+</defs>
+<rect width="1600" height="900" fill="url(#sky)"/><rect width="1600" height="900" fill="url(#sun)"/>
+<use href="#cloud" x="220" y="150"/><use href="#cloud" x="760" y="90" transform="translate(0 0) scale(1)"/><use href="#cloud" x="1180" y="210"/>
+<path d="M0 620 Q260 520 520 600 T1040 570 T1600 600 V900 H0Z" fill="#d3e9bf"/>
+<g color="#bddcab" opacity=".9"><use href="#pine" x="120" y="590" transform="scale(.7)"/><use href="#pine" x="1180" y="560" transform="scale(.7)"/><use href="#round" x="1500" y="640" transform="scale(.8)"/></g>
+<path d="M0 700 Q300 610 640 690 T1280 660 T1600 700 V900 H0Z" fill="#b9dca0"/>
+<g color="#8fc77a"><use href="#pine" x="60" y="730"/><use href="#round" x="210" y="760" transform="scale(.9)"/><use href="#pine" x="330" y="750" transform="scale(.8)"/><use href="#pine" x="1240" y="740" transform="scale(.9)"/><use href="#round" x="1390" y="770"/><use href="#pine" x="1520" y="740"/></g>
+<path d="M0 800 Q400 740 800 800 T1600 790 V900 H0Z" fill="#9fd085"/>
+<g color="#6fb35c"><use href="#round" x="90" y="830" transform="scale(1.1)"/><use href="#pine" x="1480" y="840" transform="scale(1.2)"/><use href="#pine" x="1340" y="850"/></g>
+<g fill="#ff9db8" opacity=".9"><circle cx="520" cy="850" r="7"/><circle cx="860" cy="860" r="6"/><circle cx="1080" cy="845" r="7"/></g><g fill="#ffe14d" opacity=".9"><circle cx="640" cy="858" r="6"/><circle cx="960" cy="852" r="6"/></g>
+<g fill="none" stroke="#6b8a5a" stroke-width="3" stroke-linecap="round" opacity=".6"><path d="M900 200q10-10 20 0q10-10 20 0"/><path d="M960 240q8-8 16 0q8-8 16 0"/></g>
+</svg>

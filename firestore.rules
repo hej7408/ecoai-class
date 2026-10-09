@@ -1,0 +1,47 @@
+// Firestore 보안 규칙 (Firebase 콘솔 → Firestore → 규칙에 붙여넣고 게시)
+// - 학생: 익명 로그인. 학급 코드를 알면 자기 번호 문서에 저장·조회
+// - 교사: 아이디+비밀번호(가상 이메일). 가입 시 'config/codes' 문서의 teacher 값과 같은 코드가 있어야 teachers 문서를 만들 수 있음(서버가 검사)
+// - 관리자: 가상 이메일 admin@ecoai.app 계정(비밀번호만 입력해 로그인)
+// ⚠ 학생·교사 기본 흐름만 시험했습니다. 시험 학급으로 먼저 확인하고, 학교·교육청 개인정보 지침을 따르세요.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function staff() { return signedIn() && request.auth.token.firebase.sign_in_provider == 'password'; }
+    function isAdmin() { return staff() && request.auth.token.email == 'admin@ecoai.app'; }
+    function isTeacher() { return isAdmin() || (staff() && exists(/databases/$(database)/documents/teachers/$(request.auth.uid))); }
+    function myId() { return get(/databases/$(database)/documents/teachers/$(request.auth.uid)).data.id; }
+
+    // 관리자만 읽고 쓰는 설정 (교사 가입 코드: { teacher: '코드' })
+    match /config/{doc} {
+      allow read, write: if isAdmin();
+    }
+
+    // 교사 등록 문서: 올바른 가입 코드가 있어야 본인 문서를 만들 수 있음
+    match /teachers/{uid} {
+      allow create: if staff() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['id', 'name', 'code', 'created'])
+        && request.resource.data.code == get(/databases/$(database)/documents/config/codes).data.teacher;
+      allow get: if staff() && (request.auth.uid == uid || isAdmin());
+      allow list, delete: if isAdmin();
+      allow update: if false;
+    }
+
+    match /classes/{code} {
+      function owns() { return isAdmin() || (isTeacher() && get(/databases/$(database)/documents/classes/$(code)).data.teacherId == myId()); }
+      allow get: if signedIn();
+      allow list: if isAdmin() || (isTeacher() && resource.data.teacherId == myId());
+      allow create: if isTeacher() && (isAdmin() || request.resource.data.teacherId == myId());
+      allow update, delete: if isAdmin() || (isTeacher() && resource.data.teacherId == myId());
+
+      match /students/{no} {
+        allow get, create, update: if signedIn();
+        allow list, delete: if owns();
+      }
+      match /comments/{no} {
+        allow get: if signedIn();
+        allow create, update, delete: if owns();
+      }
+    }
+  }
+}
