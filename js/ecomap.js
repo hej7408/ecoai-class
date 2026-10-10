@@ -98,6 +98,27 @@
     function removePin(p) { const mk = markers[p.id]; if (mk) map.removeLayer(mk); delete markers[p.id]; m.pins = m.pins.filter(x => x.id !== p.id); savePins(); }
     function addPin(ll) { const p = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), lat: ll.lat, lon: ll.lng, e: cur[0], n: cur[1], memo: '', ts: Date.now() }; m.pins.push(p); addMarker(p); Eco.ui.sfx('pop'); savePins(); }
 
+
+    /* ── PNG로 저장: 지도 타일 + 표시한 핀 + 제목/범례를 한 장의 그림으로 ── */
+    function savePng() {
+      if (!map || !m.school) { Eco.ui.toast('먼저 학교를 검색해 지도를 불러와 주세요'); return; }
+      const mr = mapBox.getBoundingClientRect(), W0 = Math.round(mr.width), H0 = Math.round(mr.height), HEAD = 70, FOOT = 30, sc = 2;
+      const cv = document.createElement('canvas'); cv.width = W0 * sc; cv.height = (H0 + HEAD + FOOT) * sc; const g = cv.getContext('2d'); g.scale(sc, sc);
+      g.fillStyle = '#fff'; g.fillRect(0, 0, W0, H0 + HEAD + FOOT);
+      g.fillStyle = '#2f8f4e'; g.fillRect(0, 0, W0, HEAD); g.fillStyle = '#fff'; g.textBaseline = 'middle'; g.font = 'bold 22px sans-serif'; g.fillText('🗺️ ' + m.school.name + ' 생태지도', 14, 26);
+      const c = cnt(); g.font = '13px sans-serif'; g.fillText(BR.map(b => b[0] + (c[b[0]] || 0)).join('  ') + '  | 총 ' + m.pins.length + '건', 14, 53);
+      g.save(); g.beginPath(); g.rect(0, HEAD, W0, H0); g.clip(); g.translate(0, HEAD); g.fillStyle = '#e8efe0'; g.fillRect(0, 0, W0, H0);
+      mapBox.querySelectorAll('img.leaflet-tile').forEach(im => { if (!im.complete || !im.naturalWidth) return; const r = im.getBoundingClientRect(); try { g.drawImage(im, r.left - mr.left, r.top - mr.top, r.width, r.height); } catch (e) { } });
+      const pin = (x, y, emo, r, col, memo) => { g.beginPath(); g.arc(x, y, r, 0, 7); g.fillStyle = '#fff'; g.fill(); g.lineWidth = 3; g.strokeStyle = col; g.stroke(); g.fillStyle = '#000'; g.font = Math.round(r * 1.05) + 'px serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(emo, x, y + 1);
+        if (memo) { g.font = 'bold 12px sans-serif'; g.lineWidth = 4; g.strokeStyle = 'rgba(255,255,255,.95)'; g.strokeText(memo, x, y + r + 11); g.fillStyle = '#23311f'; g.fillText(memo, x, y + r + 11); } };
+      m.pins.forEach(p => { const q = map.latLngToContainerPoint([p.lat, p.lon]); pin(q.x, q.y, p.e, 15, '#2f8f4e', p.memo); });
+      const sp = map.latLngToContainerPoint([m.school.lat, m.school.lon]); pin(sp.x, sp.y, '🏫', 19, '#e8506f', null); g.restore();
+      g.fillStyle = '#55664d'; g.textAlign = 'left'; g.textBaseline = 'middle'; g.font = '11px sans-serif'; const d = new Date(); g.fillText('Eco AI 숲속탐험대 · ' + d.getFullYear() + '.' + (d.getMonth() + 1) + '.' + d.getDate() + ' · ' + (base === 'sat' ? 'Tiles © Esri' : '© OpenStreetMap contributors'), 14, H0 + HEAD + FOOT / 2);
+      try {
+        cv.toBlob(b => { if (!b) { Eco.ui.toast('그림을 만들지 못했어요'); return; } const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = '생태지도_' + m.school.name.replace(/[\\/:*?"<>|\s]/g, '') + '_' + d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0') + '.png'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); Eco.ui.toast('🖼️ PNG 그림을 저장했어요! (다운로드 폴더)'); Eco.dailyOnce('ecomap-png', 5, '생태지도 PNG 저장'); }, 'image/png');
+      } catch (e) { Eco.ui.toast('이 화면은 그림으로 저장할 수 없어요. 화면 캡처(Win+Shift+S)를 이용해 주세요.'); }
+    }
+
     /* ── 도구 ── */
     const tools = h('div.row', BR.map((b, i) => h('button.btn.sm' + (i === 0 ? '.sun' : '.alt'), { onclick: e => { cur = b; [...e.target.parentElement.children].forEach(x => { x.classList.remove('sun'); x.classList.add('alt'); }); e.target.classList.add('sun'); e.target.classList.remove('alt'); } }, b[0] + ' ' + b[1])));
     const baseBtns = h('div.row', { style: { gap: '4px' } }, h('button.btn.sm', { onclick: e => setBase('osm', e.target) }, '🗺️ 지도'), h('button.btn.sm.alt', { onclick: e => setBase('sat', e.target) }, '🛰️ 위성'));
@@ -111,8 +132,8 @@
       if (!window.L) { mapBox.append(h('div.note', '지도 엔진을 불러오지 못했어요.')); return; }
       const c = m.school ? [m.school.lat, m.school.lon] : [36.5, 127.8];
       map = L.map(mapBox, { maxZoom: 20 }).setView(c, m.school ? 18 : 7);
-      osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20, maxNativeZoom: 19, attribution: '© OpenStreetMap contributors' }).addTo(map);
-      sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 20, maxNativeZoom: 19, attribution: 'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics' });
+      osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 20, maxNativeZoom: 19, crossOrigin: 'anonymous', attribution: '© OpenStreetMap contributors' }).addTo(map);
+      sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 20, maxNativeZoom: 19, crossOrigin: 'anonymous', attribution: 'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics' });
       m.pins.forEach(addMarker); drawSchoolMarker(); map.on('click', e => { if (!m.school) { Eco.ui.toast('먼저 학교를 검색해 위치를 불러와 주세요'); return; } addPin(e.latlng); });
       map.invalidateSize(); drawSum();
       Eco.onLeave(() => { try { map.off(); map.remove(); } catch (e) { } map = null; });
@@ -122,6 +143,7 @@
       h('p.small.muted', '① 학교 이름을 검색해 지도를 불러와요 → ② 생물 도구를 고르고 → ③ 지도를 눌러 관찰한 곳을 표시해요. 표시를 눌러 이름을 적고, 끌어서 위치를 고칠 수 있어요. (‘데이터를 만드는 아이’ 되기)'),
       h('div.row', { style: { flexWrap: 'nowrap' } }, q, search1), results, h('div.row', { style: { margin: '6px 0' } }, gps, center), info, tools, h('div.row.spread', { style: { margin: '6px 0' } }, sum, baseBtns), mapBox,
       h('div.row', { style: { marginTop: '8px' } },
+        h('button.btn.sm', { onclick: savePng }, '🖼️ PNG로 저장'),
         h('button.btn.alt.sm', { onclick: () => Eco.copy(['학교,' + ((m.school && m.school.name) || ''), '번호,종류,메모,위도,경도', ...m.pins.map((p, i) => [i + 1, p.n, '"' + (p.memo || '').replace(/"/g, '""') + '"', p.lat.toFixed(6), p.lon.toFixed(6)].join(','))].join('\n')) }, '📋 표(CSV)로 복사'),
         h('button.btn.alt.sm', { onclick: () => { if (!m.pins.length) return; if (confirm('표시한 ' + m.pins.length + '곳을 모두 지울까요?')) { Object.values(markers).forEach(mk => map.removeLayer(mk)); Object.keys(markers).forEach(k => delete markers[k]); m.pins = []; savePins(); } } }, '🧹 모두 지우기')),
       h('div.small.muted', { style: { marginTop: '6px' } }, '※ 학교 위치 검색은 OpenStreetMap 데이터를 사용해요. 학교가 검색되지 않으면 주소로 검색하거나 지도를 직접 움직여 ‘이 화면 중심을 학교로 저장’을 눌러 주세요.'));

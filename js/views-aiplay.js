@@ -74,6 +74,7 @@
           h('div.card', h('h3', '🌲 연계 Eco AI 프로그램'), progs.length ? h('div.grid', progs.map(p => Eco.questCard(p))) : h('p.muted.small', '디지털교과서 어느 프로그램과도 연계해 활용할 수 있어요.')),
           h('div.card', h('h3', '🚀 바로 가기'), h('div.row', h('a.btn.ai', { href: t.url, target: '_blank', rel: 'noopener' }, (t.openLabel || t.tool + ' 열기') + ' ↗'), (t.urls || []).map(x => h('a.btn.ai', { href: x.u, target: '_blank', rel: 'noopener' }, x.t + ' ↗')), t.builtin && t.builtin.route ? h('a.btn.sun', { href: t.builtin.route }, t.builtin.label) : null), h('a.small', { href: Eco.CAFE, target: '_blank', rel: 'noopener', style: { display: 'block', marginTop: '8px' } }, '☕ 학습카페 과제 업로드')),
           h('div.card', h('h3', '📝 내 메모'), note, h('div', { style: { marginTop: '8px' } }, done)))),
+      t.guide && W[t.guide] ? W[t.guide](t) : null,
       h('div.row.spread', { style: { marginTop: '16px' } }, prev ? h('a.btn.alt', { href: '#/aiplay/' + prev.id }, '◀ ' + prev.tool) : h('span'), next ? h('a.btn', { href: '#/aiplay/' + next.id }, next.tool + ' ▶') : h('span')));
   });
 

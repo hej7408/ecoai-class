@@ -49,7 +49,7 @@ window.Eco = window.Eco || {};
       steps: [PRE, 'Eco AI 디지털교과서 ‘재활용 텃밭’, ‘유기농 비료’ 영상을 시청하고 지속가능발전교육(SDGs), 기후위기 극복 방안을 탐구해 본다.', '엔트리를 활용하여 AI 스마트 분리수거 쓰레기통을 만든다. 지도학습(이미지 모델 학습)으로 종이·유리·캔 3개의 클래스를 만들고 각 클래스에 이미지 데이터를 학습시킨다.', '엔트리를 실행하여 웹캠에 재활용품을 가져가면 화면에서 해당 재활용품이 각각의 분리수거통으로 이동하는 것을 확인한다. AI의 데이터 학습 원리도 배우고 분리배출에 대해서도 교육할 수 있다.', '(더 해 보기) 설명서의 활용 예시처럼 급식 잔반 검사 프로그램, AI 미세먼지 알리미 시스템, 해양환경교육 게임도 엔트리로 만들어 본다.'],
       links: [{ t: 'AI 스마트 분리수거 쓰레기통 (예시 작품)', u: 'https://playentry.org/ws/6662d45fdc34ed61f07fcacb' }],
       builtin: { label: '🤖 AI 트레이너로 분리수거 AI 학습시키기', route: '#/game/aitrainer' } },
-    { id: 'scienceon', no: 9, tool: '지능형 과학실 ON', cat: '데이터 탐구', emoji: '🗺️', logo: 'guide/scienceon-logo.png', url: 'https://science-on.kosac.re.kr', colorClass: 'ai',
+    { id: 'scienceon', guide: 'scienceGuide', no: 9, tool: '지능형 과학실 ON', cat: '데이터 탐구', emoji: '🗺️', logo: 'guide/scienceon-logo.png', url: 'https://science-on.kosac.re.kr', colorClass: 'ai',
       title: '우리 학교 생태환경지도 만들기', link: ['n10', 'f2'], needs: '한국과학창의재단 개발 · 디지털 탐구도구 활용 (주소: science-on.kosac.re.kr)',
       desc: '‘데이터를 배우는 아이’에서 ‘데이터를 만들어내는 아이’로! 학교 주변 식물을 조사해 생태지도를 만들어요.',
       steps: [PRE, 'Eco AI 디지털교과서 ‘스마트렌즈’ 영상을 시청하고 학교 주변의 풀, 꽃 등의 식물들을 알아본다.', '한국과학창의재단에서 개발한 지능형 과학실 프로그램으로 우리 학교 생태지도 만들기 탐구과정을 계획한다. 수집할 생물을 선정하고, 생물 조사에 적절한 디지털 탐구도구를 선정한다.', '학교 주변에 살고 있는 식물을 조사하여 데이터를 수집하고, 이 데이터를 바탕으로 우리 학교 생태지도를 만든다.', '여러 지역과 학교의 데이터가 쌓일수록 과학적 데이터로 활용 가능하다.'],
